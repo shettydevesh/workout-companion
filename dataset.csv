@@ -1,0 +1,92 @@
+id,name,total_time,exercise_duration,met_value,calories_burned_per_kg
+454,15 Min HIIT ,17.65,10,9,1.575
+455,Basics For Beginners,19,15,9,2.3625
+456,20 Min HIIT ,23,15,9,2.3625
+457,Legs and Shoulders,19,15,8,2.1
+458,Quick Burn,17,12,8,1.68
+459,Build Your Endurance,14,8,8,1.12
+460,Stretch It More,18,12,3,0.63
+461,Bedtime Stretches,13,9,3,0.4725
+462,Abs Workout,17,12,8,1.68
+463,Chest and Shoulders ,16,10,8,1.4
+464,Keep Your Joints Happy,27,20,3,1.05
+465,Hold It There,22,15,5,1.3125
+466,Hip Mobility,19,15,6,1.575
+468,For A Deep Sleep,11,6,3,0.315
+469,Sleep Time Yoga,12,6.5,3,0.34125
+470,Strong Like A Warrior,24,20,5.5,1.925
+471,Dawn Of A New Day,17,11,5,0.9625
+472,Power Up,21,15,5,1.3125
+473,For A Rock Solid Core,10,6,5.5,0.5775
+474,Tone Your Glutes,19,14,8,1.96
+484,Strengthen Your Back,14,9,5,0.7875
+485,Improve Your Instincts,16,10,5,0.875
+486,Strengthen Your Legs,21,10,5,0.875
+487,Absolute Balance,16,10,5,0.875
+488,Guide to Office Yoga,11,7,3,0.3675
+489,Lower Back Strength,17,10,8,1.4
+514,Menstruation Stretches,16,10,3,0.525
+515,Enhance Your Confidence,16,10,6,1.05
+525,Dawn Of A New Day (हिन्दी),15,11,5,0.9625
+532,Suryanamaskar A,21,10,7,1.225
+590,Improve Your Instincts (हिन्दी),16,10,5,0.875
+592,Sleep Time Yoga (हिन्दी),11,6.5,3,0.34125
+611,Traditional Suryanamaskar,16,8,7,0.98
+633,Strong Like A Warrior (हिन्दी),24,20,7,2.45
+660,A Fresh Beginning,15,9,8,1.26
+681,Suryanamaskar Type B,16,10,5.5,0.9625
+690,Guide to Office Yoga (हिन्दी),11,7,3,0.3675
+691,Asanas for Balance,16,8,5,0.7
+692,Traditional Suryanamaskar,16,8,7,0.98
+693,Asanas for Stronger Back,14,9,5,0.7875
+694,Quick Recharge,21,15,5,1.3125
+695,Suryanamaskar Type A,21,10,7,1.225
+696,Asanas for Flexibility,16,10,3,0.525
+697,Relaxing Stretches,21,15,3,0.7875
+700,Asanas For Flexibility,16,10,3,0.525
+701,Suryanamaskar Type A,21,10,7,1.225
+702,Asanas For Posture,16,10,3,0.525
+703,Suryanamaskar Type B,16,10,5.5,0.9625
+704,Asanas For Core,10,6,5.5,0.5775
+706,Warrior Flow,24,11,5.5,1.05875
+908,Relaxation,11,13,3,0.6825
+1424,Full Body HIIT,29,24,9,3.78
+1426,Upper Body HIIT,30,25,9,3.9375
+1427,Lower Body HIIT,32,25,9,3.9375
+1433,Core Endurance - HIIT,33,25,9,3.9375
+1434,Day 1: Upper Body Workout,30,25,9,3.9375
+1435,Full-Body Relaxation,25,15,3,0.7875
+1436,Day 2: Full Body Workout,29,24,9,3.78
+1437,Day 3: Lower Body Workout,32,25,9,3.9375
+1438,Day 4: Core Endurance,33,25,9,3.9375
+1439,Day 5: Intense Full Body Workout,33,25,9,3.9375
+1440,Intense Full Body Workout,33,25,9,3.9375
+1441,Intense Lower Body HIIT,32,25,9,3.9375
+1442,Day 6: Intense Lower Body,32,25,9,3.9375
+1443,Day 7: Full-Body Relaxation,33,15,3,0.7875
+1524,Balance of Trilogy - 1,13,10,7,1.225
+1525,Balance of Trilogy - 2,14.3333,13,7,1.5925
+1526,Maze - 1,21,13,7,1.5925
+1527,Maze - 2,15,12.5,7,1.53125
+1528,Conquer Your Fear,16,12,5.5,1.155
+1529,Flipside,14,11,7,1.3475
+1530,Hatha Flow,16,12,5.5,1.155
+1531,Refuel Your Energy,25,19,4,1.33
+1532,Rise & Shine,16.85,12,5.5,1.155
+1533,Warrior Flow,14,10,7,1.225
+1609,Day 1: Gentle Yoga Stretches,23,20,3,1.05
+1645,Day 2: Opening Up The Pelvis,17.3667,15,4,1.05
+1646,Day 3: Gentle Yoga Stretching,26.1167,20,4,1.4
+1650,Day 4: Kegel Exercise,21,16,5,1.4
+1651,Day 5: Vinyasa for Pelvic Strength,25,20,7,2.45
+1652,"Day 6: Recover, Rejuvenate & Relax",20.5833,15,4,1.05
+1842,For Upper Body Strength,21,17,5,1.4875
+1843,For Lower Body Strength,15,16,5,1.4
+1844,Balancing Challenges,28,26,4,1.82
+1845,For Instant Confidence,12,17,5,1.4875
+1846,For A Calm Beginning,19,17,4,1.19
+1851,Asana and Pranayama,16,11,3.3,0.63525
+1852,Asana and Mantra,18,16,4,1.12
+1859,Asana and Mantra,18,16,4,1.12
+1860,Asana and Pranayama,16,11,3.3,0.63525
+1861,For A Calm Beginning,19,17,4,1.19
