@@ -15,7 +15,7 @@ Workout Companion uses Anthropic's Claude AI to create highly personalized fitne
 
 ## 🔧 Architecture
 
-![Workout Companion Architecture](docs/architecture.svg)
+![Workout Companion Architecture](docs/architecture.png)
 
 The application is built with a modular architecture:
 
