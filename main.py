@@ -65,18 +65,7 @@ def main():
         with st.spinner('Generating your personalized fitness and nutrition plan...'):
             try:
                 planner = PlanGenerator(exercise_df)
-                plan, calculations = planner.generate_plan(user_info, ai_service)
-                plan['weight_loss_calculation'] = {
-                    'total_calories_to_burn': calculations.get('total_calories_to_burn'),
-                    'daily_calorie_deficit': calculations.get('daily_calorie_deficit'),
-                    'exercise_portion_calories': calculations.get('exercise_portion_calories'),
-                    'diet_portion_calories': calculations.get('diet_portion_calories'),
-                }
-                plan['daily_calorie_intake'] = {
-                    'baseline_calories': calculations.get('daily_maintenance_calories'),
-                    'diet_calorie_deficit': calculations.get('diet_portion_calories'),
-                    'target_daily_intake': calculations.get('target_daily_intake'),
-                }
+                plan = planner.generate_plan(user_info, ai_service)
                 # Display plan if successful
                 if "error" in plan:
                     st.error(plan["error"])
@@ -102,7 +91,6 @@ def main():
                     # Display daily calorie intake recommendation
                     st.markdown('<div class="section-header">Recommended Daily Calorie Intake</div>', unsafe_allow_html=True)
                     calorie_intake = plan.get("daily_calorie_intake", {})
-                    logger.info(f"Daily calorie intake: {calorie_intake}")
                     col1, col2 = st.columns(2)
                     with col1:
                         st.markdown(f"""

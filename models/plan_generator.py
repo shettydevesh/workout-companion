@@ -74,8 +74,18 @@ class PlanGenerator:
             # Combine plans
             combined_plan = self.nutrition_model.combine_plans(workout_plan, nutrition_plan)
             logger.info("Successfully generated complete fitness plan using parallel processing")
-            
-            return combined_plan, user_preferences
+            combined_plan['weight_loss_calculation'] = {
+                    'total_calories_to_burn': user_preferences.get('total_calories_to_burn'),
+                    'daily_calorie_deficit': user_preferences.get('daily_calorie_deficit'),
+                    'exercise_portion_calories': user_preferences.get('exercise_portion_calories'),
+                    'diet_portion_calories': user_preferences.get('diet_portion_calories'),
+                }
+            combined_plan['daily_calorie_intake'] = {
+                'baseline_calories': user_preferences.get('daily_maintenance_calories'),
+                'diet_calorie_deficit': user_preferences.get('diet_portion_calories'),
+                'target_daily_intake': user_preferences.get('target_daily_intake'),
+            }
+            return combined_plan
             
         except Exception as e:
             logger.error(f"Error generating plan: {e}", exc_info=True)
