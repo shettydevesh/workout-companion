@@ -74,8 +74,7 @@ def main():
                             st.text(plan["raw_response"])
                 else:
                     # Save plan to session state
-                    st.session_state['current_plan'] = plan
-
+                    st.session_state["current_plan"] = plan
                     # Display user profile
                     user_profile_card(
                         plan['user_profile'],
@@ -117,14 +116,7 @@ def main():
                         / (3 * user_info.get("weight") * 3.5)
                         * (
                             ((2.5 * 5280) / 60)
-                            / (
-                                (
-                                    0.413
-                                    * plan.get("user_profile").get("height_cm")
-                                    * 0.394
-                                )
-                                / 12
-                            )
+                            / ((0.413 * user_info.get("height_cm") * 0.394) / 12)
                         )
                     )
                     st.markdown(
