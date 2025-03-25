@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class WorkoutModel:
     """Model for generating personalized workout plans."""
-    
+
     def __init__(self, weight, exercise_data=None):
         """
         Initialize the workout model.
@@ -24,14 +24,14 @@ class WorkoutModel:
         """
         self.weight = weight
         self.df = exercise_data
-        
+
         if self.df is not None:
             # Calculate total calories burned for this user's weight
             self.df['total_calories_burned'] = self.df['calories_burned_per_kg'] * weight
-            
+
         self.prompt_manager = PromptManager()
         self.calculator = FitnessCalculator()
-        
+
     def prepare_user_preferences(self, height, weight, goal_weight, duration_weeks, 
                                 location, diet_preference, time_constraint, age, 
                                 gender, activity_level, food_type='Maharashtrian'):
@@ -57,25 +57,25 @@ class WorkoutModel:
         # Calculate BMI
         bmi = self.calculator.calculate_bmi(weight, height)
         bmi_category = self.calculator.get_bmi_category(bmi)
-        
+
         # Calculate calorie deficit
         calorie_data = self.calculator.calculate_weight_loss_calories(
             weight, goal_weight, duration_weeks
         )
-        
+
         # Calculate BMR
         bmr = self.calculator.calculate_bmr(weight, height, age, gender)
-        
+
         # Calculate TDEE
         tdee = self.calculator.calculate_tdee(bmr, activity_level)
-        
+
         # Calculate target daily intake
         diet_portion = calorie_data["diet_portion_calories"]
         food_calories = tdee - diet_portion
-        
+
         # Calculate macronutrient distribution based on activity level
         activity_multiplier = self.calculator.get_activity_multiplier(activity_level)
-        
+
         if activity_multiplier <= 1.55:  # Low to moderate activity
             protein_pct = 0.3
             carbs_pct = 0.45
@@ -84,11 +84,11 @@ class WorkoutModel:
             protein_pct = 0.3
             carbs_pct = 0.5
             fat_pct = 0.2
-            
+
         amount_of_protein = round((food_calories * protein_pct) / 4, 2)  # 4 cal/g
         amount_of_carbs = round((food_calories * carbs_pct) / 4, 2)      # 4 cal/g
         amount_of_fat = round((food_calories * fat_pct) / 9, 2)          # 9 cal/g
-        
+
         # Compile user preferences
         user_preferences = {
             'weight': weight,
@@ -114,10 +114,10 @@ class WorkoutModel:
             'carbs_target': amount_of_carbs,
             'fat_target': amount_of_fat
         }
-        
+
         logger.info(f"Prepared user preferences for workout plan")
         return user_preferences
-    
+
     def generate_workout_plan(self, user_preferences, ai_service):
         """
         Generate only the workout portion of the plan.
@@ -132,16 +132,17 @@ class WorkoutModel:
         try:
             if self.df is None:
                 return {"error": "Exercise data not available"}
-                
+
             # Prepare exercise data
             exercise_data = self.df.to_dict(orient='records')
             user_profile = {
-                "current_weight": user_preferences['weight'],
-                "goal_weight": user_preferences['goal_weight'],
-                "duration_weeks": user_preferences['duration_weeks'],
-                "time_constraint_minutes": user_preferences['time_constraint_in_mins'],
-                "bmi": user_preferences['BMI'],
-                "bmi_category": user_preferences['bmi_category'],
+                "height_cm": user_preferences["height_cm"],
+                "current_weight": user_preferences["weight"],
+                "goal_weight": user_preferences["goal_weight"],
+                "duration_weeks": user_preferences["duration_weeks"],
+                "time_constraint_minutes": user_preferences["time_constraint_in_mins"],
+                "bmi": user_preferences["BMI"],
+                "bmi_category": user_preferences["bmi_category"],
             }
             custom_workout_changes = {
                 'weight': user_preferences['weight'],
@@ -164,11 +165,11 @@ class WorkoutModel:
                 f"{json.dumps(user_preferences, indent=2)} user preferences. Focus exclusively on the exercise plan with a 5-day schedule."
                 "Do not include any nutrition or diet information."
             )
-            
+
             # Log the request
             logger.info(f"Generating workout plan for user with BMI {user_preferences['BMI']}, " 
                        f"time constraint {user_preferences['time_constraint_in_mins']} minutes")
-            
+
             # Get response from AI service
             response = ai_service.send_message(
                 system_message=system_message,
@@ -178,15 +179,15 @@ class WorkoutModel:
             if not response.get("success", False):
                 logger.error(f"Workout plan generation error: {response.get('error', 'Unknown error')}")
                 return response
-            
+
             logger.info("Successfully generated workout plan")
             response['user_profile'] = user_profile
             return response
-            
+
         except Exception as e:
             logger.error(f"Error generating workout plan: {e}", exc_info=True)
             return {"error": f"Error generating workout plan: {str(e)}"}
-    
+
     def validate_workout_plan(self, plan_data, user_preferences):
         """
         Validate the workout plan against user constraints.
@@ -199,38 +200,38 @@ class WorkoutModel:
             tuple: (is_valid, list_of_issues)
         """
         issues = []
-        
+
         # Check if required sections exist
         if "workout_plan" not in plan_data:
             issues.append("Workout plan section missing from response")
             return False, issues
-            
+
         workout_plan = plan_data["workout_plan"]
-        
+
         # Check if weekly plan exists
         if "weekly_plan" not in workout_plan:
             issues.append("Weekly plan missing from workout plan")
             return False, issues
-            
+
         weekly_plan = workout_plan["weekly_plan"]
-        
+
         # Validate time constraints
         time_constraint = user_preferences["time_constraint_in_mins"]
         max_allowed_time = time_constraint + 5  # 5 minute buffer
-        
+
         for day, day_plan in weekly_plan.items():
             if "total_time" not in day_plan:
                 issues.append(f"Total time missing for {day}")
                 continue
-                
+
             total_time = day_plan["total_time"]
-            
+
             if total_time > max_allowed_time:
                 issues.append(f"{day}'s workout exceeds time constraint: {total_time} mins > {max_allowed_time} mins")
-        
+
         # Check if at least one workout is included for each day
         for day, day_plan in weekly_plan.items():
             if "workouts" not in day_plan or not day_plan["workouts"]:
                 issues.append(f"No workouts specified for {day}")
-        
+
         return len(issues) == 0, issues

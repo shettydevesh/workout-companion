@@ -33,7 +33,7 @@ load_custom_css()
 def main():
     # Render header
     render_header()
-    
+
     # Check for API key
     api_key = os.getenv('ANTHROPIC_KEY')
     if not api_key:
@@ -41,7 +41,7 @@ def main():
         api_key = st.text_input("Anthropic API Key", type="password")
         if not api_key:
             st.stop()
-    
+
     # Initialize AI service
     ai_service = AnthropicService(
         api_key=api_key,
@@ -49,7 +49,7 @@ def main():
         max_retries=config.API_MAX_RETRIES,
         timeout=config.API_TIMEOUT
     )
-    
+
     # Load exercise data
     try:
         exercise_df = load_exercise_data(config.DATASET_PATH)
@@ -57,7 +57,7 @@ def main():
     except Exception as e:
         st.error(f"Error loading exercise data: {e}")
         st.stop()
-    
+
     # Get user information from sidebar form
     user_info = user_info_form()
     # Generate plan when button is clicked
@@ -75,7 +75,7 @@ def main():
                 else:
                     # Save plan to session state
                     st.session_state['current_plan'] = plan
-                    
+
                     # Display user profile
                     user_profile_card(
                         plan['user_profile'],
@@ -83,11 +83,11 @@ def main():
                         user_info["height_inch"],
                         user_info["height_cm"]
                     )
-                    
+
                     # Display weight loss calculation
                     weight_loss_calc = plan.get("weight_loss_calculation", {})
                     weight_loss_chart(weight_loss_calc)
-                    
+
                     # Display daily calorie intake recommendation
                     st.markdown('<div class="section-header">Recommended Daily Calorie Intake</div>', unsafe_allow_html=True)
                     calorie_intake = plan.get("daily_calorie_intake", {})
@@ -100,42 +100,64 @@ def main():
                             <p><strong>Target Daily Intake:</strong> {calorie_intake.get('target_daily_intake'):,.0f} kcal</p>
                         </div>
                         """, unsafe_allow_html=True)
-                    
+
                     # Display workout plan
                     st.markdown('<div class="section-header">5-Day Workout Plan</div>', unsafe_allow_html=True)
-                    
+
                     workout_plan = plan.get("workout_plan", {})
-                    
+
                     st.markdown('<div class="subsection-header">Workout Strategy</div>', unsafe_allow_html=True)
                     st.markdown(f"""
                     <div class="info-box">
                         {workout_plan.get('strategy')}
                     </div>
                     """, unsafe_allow_html=True)
-                    
+                    steps = (
+                        (weight_loss_calc.get("exercise_portion_calories") * 200)
+                        / (3 * user_info.get("weight") * 3.5)
+                        * (
+                            ((2.5 * 5280) / 60)
+                            / (
+                                (
+                                    0.413
+                                    * plan.get("user_profile").get("height_cm")
+                                    * 0.394
+                                )
+                                / 12
+                            )
+                        )
+                    )
+                    st.markdown(
+                        f'<div class="subsection-header">Note: To Burn {weight_loss_calc.get("exercise_portion_calories"):,.0f} Calories Per Day, you need to complete {steps:,.0f} steps</div>',
+                        unsafe_allow_html=True,
+                    )
+
                     # Display detailed workout plan
                     st.markdown('<div class="subsection-header">Detailed Weekly Plan</div>', unsafe_allow_html=True)
-                    
+
                     weekly_plan = workout_plan.get("weekly_plan", {})
                     for i, (day, info) in enumerate(weekly_plan.items()):
                         display_workout_day(day, info, i)
-                    
+
                     # Display rest days
                     rest_days = workout_plan.get("rest_days", ["Saturday", "Sunday"])
                     st.markdown(f'<div class="day-header">{" & ".join(rest_days)}: Rest Days</div>', unsafe_allow_html=True)
-                    
+
                     # Display nutrition plan
                     nutrition_plan = plan.get("nutrition_plan", {})
-                    st.markdown(f'<div class="section-header">Nutrition Plan for {nutrition_plan.get("diet_preference")} in {nutrition_plan.get("location")}</div>', unsafe_allow_html=True)
-                    
+                    st.markdown(
+                        f'<div class="section-header">Nutrition Plan for {user_info.get("diet_preference")} in {user_info.get("location")}</div>',
+                        unsafe_allow_html=True,
+                    )
+
                     # Display meal plan
                     meals = nutrition_plan.get("meals", {})
                     for meal_name, meal_data in meals.items():
                         render_meal_table(meal_name, meal_data)
-                    
+
                     # Add export functionality
                     export_plan_button(plan)
-                    
+
             except Exception as e:
                 st.error(f"Error generating plan: {e}")
                 logger.error(f"Plan generation error: {e}", exc_info=True)
@@ -153,7 +175,7 @@ def main():
         
         Your plan will be tailored to your specific body metrics, goals, and food preferences.
         """)
-        
+
         # Add quick tips or information
         with st.expander("Why use Workout Companion?"):
             st.markdown("""
