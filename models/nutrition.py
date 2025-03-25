@@ -85,20 +85,6 @@ class NutritionModel:
     
     def generate_nutrition_plan(self, user_preferences, ai_service):
         try:
-            # Create cache key based on relevant preferences
-            cache_data = {
-                'weight': user_preferences['weight'],
-                'goal_weight': user_preferences['goal_weight'],
-                'dietary_type': user_preferences['dietary_type'],
-                'cusine_type': user_preferences['cusine_type'],
-                'location': user_preferences['location'],
-                'target_daily_intake': user_preferences['target_daily_intake'],
-                'protein_target': user_preferences['protein_target'],
-                'carbs_target': user_preferences['carbs_target'],
-                'fat_target': user_preferences['fat_target']
-            }
-            cache_key = f"nutrition_{hashlib.md5(json.dumps(cache_data, sort_keys=True).encode()).hexdigest()}"
-            
             # Calculate macro distribution
             macros = self.calculate_macro_targets(
                 user_preferences['target_daily_intake'],
@@ -114,15 +100,27 @@ class NutritionModel:
             user_preferences['macro_targets'] = macros
             user_preferences['meal_calories'] = meal_calories
             
+            custom_nutrition_data = {
+                'daily_maintenance_calories': user_preferences['daily_maintenance_calories'],
+                'target_daily_intake': user_preferences['target_daily_intake'],
+                'protein_target': user_preferences['protein_target'],
+                'carbs_target': user_preferences['carbs_target'],
+                'fat_target': user_preferences['fat_target'],
+                'dietary_type': user_preferences['dietary_type'],
+                'cusine_type': user_preferences['cusine_type'],
+                'location': user_preferences['location'],
+                'duration_weeks': user_preferences['duration_weeks'],
+            }
+            
             # Get nutrition-specific prompt
             system_message = self.prompt_manager.format_nutrition_prompt(
-                user_preferences
+                user_preferences, custom_nutrition_data
             )
             
             # Create user message
             user_message = (
                 "Please create a personalized NUTRITION PLAN ONLY based on these "
-                f"user preferences. Focus exclusively on meal planning and macronutrient distribution. "
+                f"{json.dumps(user_preferences)} user preferences. Focus exclusively on meal planning and macronutrient distribution. "
                 "Do not include any workout or exercise information."
             )
             
@@ -135,7 +133,6 @@ class NutritionModel:
                 system_message=system_message,
                 user_message=user_message,
             )
-            
             # Check for errors
             if not response.get("success", False):
                 logger.error(f"Nutrition plan generation error: {response.get('error', 'Unknown error')}")

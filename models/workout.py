@@ -135,29 +135,33 @@ class WorkoutModel:
                 
             # Prepare exercise data
             exercise_data = self.df.to_dict(orient='records')
-            
-            # Create cache key based on relevant preferences
-            cache_data = {
+            user_profile = {
+                "current_weight": user_preferences['weight'],
+                "goal_weight": user_preferences['goal_weight'],
+                "duration_weeks": user_preferences['duration_weeks'],
+                "time_constraint_minutes": user_preferences['time_constraint_in_mins'],
+                "bmi": user_preferences['BMI'],
+                "bmi_category": user_preferences['bmi_category'],
+            }
+            custom_workout_changes = {
                 'weight': user_preferences['weight'],
                 'height_cm': user_preferences['height_cm'],
-                'BMI': user_preferences['BMI'],
                 'goal_weight': user_preferences['goal_weight'],
+                'bmi': user_preferences['BMI'],
+                'bmi_category': user_preferences['bmi_category'],
                 'duration_weeks': user_preferences['duration_weeks'],
-                'time_constraint_in_mins': user_preferences['time_constraint_in_mins'],
+                'constraint_time': user_preferences['time_constraint_in_mins'],
                 'activity_level': user_preferences['activity_level'],
-                'exercise_portion_calories': user_preferences['exercise_portion_calories']
+                'location': user_preferences['location'],
+                'age': user_preferences['age'],
+                'gender': user_preferences['gender'],
             }
-            cache_key = f"workout_{hashlib.md5(json.dumps(cache_data, sort_keys=True).encode()).hexdigest()}"
-            
             # Get workout-specific prompt
-            system_message = self.prompt_manager.format_workout_prompt(
-                exercise_data, user_preferences
-            )
-            
+            system_message = self.prompt_manager.format_workout_prompt(exercise_data, user_preferences, custom_workout_changes)
             # Create user message
             user_message = (
                 "Please create a personalized WORKOUT PLAN ONLY based on these "
-                f"user preferences. Focus exclusively on the exercise plan with a 5-day schedule. "
+                f"{json.dumps(user_preferences, indent=2)} user preferences. Focus exclusively on the exercise plan with a 5-day schedule."
                 "Do not include any nutrition or diet information."
             )
             
@@ -176,6 +180,7 @@ class WorkoutModel:
                 return response
             
             logger.info("Successfully generated workout plan")
+            response['user_profile'] = user_profile
             return response
             
         except Exception as e:

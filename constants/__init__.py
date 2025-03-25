@@ -1,0 +1,1 @@
+from .prompts import workout_prompt, nutrition_plan

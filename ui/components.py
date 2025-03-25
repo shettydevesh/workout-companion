@@ -73,6 +73,7 @@ def user_info_form():
         }
 
 def user_profile_card(user_profile, height_ft, height_inch, height_cm):
+    
     """
     Render the user profile overview card.
     
@@ -83,7 +84,6 @@ def user_profile_card(user_profile, height_ft, height_inch, height_cm):
         height_cm (float): Height in centimeters
     """
     st.markdown('<div class="section-header">User Profile Overview</div>', unsafe_allow_html=True)
-    
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown(f"""

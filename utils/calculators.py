@@ -157,8 +157,8 @@ class FitnessCalculator:
         daily_deficit = total_calorie_deficit / days if days > 0 else 0
         
         # Split between exercise and diet
-        exercise_portion = daily_deficit * 0.3
-        diet_portion = daily_deficit * 0.7
+        exercise_portion = daily_deficit * 0.25
+        diet_portion = daily_deficit * 0.75
         
         return {
             "total_calories_to_burn": round(total_calorie_deficit, 2),

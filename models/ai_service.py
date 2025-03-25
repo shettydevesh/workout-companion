@@ -51,7 +51,7 @@ class AnthropicService:
                 start_time = time.time()
                 response = self.client.messages.create(
                     model=self.model,
-                    max_tokens=4000,
+                    max_tokens=2500,
                     temperature=0,
                     system=system_message,
                     messages=[
@@ -73,7 +73,6 @@ class AnthropicService:
                 cost_inr = cost_usd * 86.93  # Approximate conversion to INR
                 
                 logger.info(f"Request tokens: {input_tokens} in, {output_tokens} out (est. cost: ${cost_usd:.6f}, ₹{cost_inr:.2f})")
-                
                 # Parse the response
                 result = self._parse_response(response)
                 

@@ -78,7 +78,7 @@ def main():
                     
                     # Display user profile
                     user_profile_card(
-                        plan.get("user_profile", {}),
+                        plan['user_profile'],
                         user_info["height_ft"],
                         user_info["height_inch"],
                         user_info["height_cm"]
